@@ -23,7 +23,7 @@ This project focuses on performing a detailed analysis of the Netflix titles dat
 ##### 8. Utilities for Customers:
 * Created utilities such as the "Top 10 Latest Movies List" to enhance user experience by providing quick access to popular and recent content
 
-##### Detailed Analysis
+## Detailed Analysis
 
 
 <details>
@@ -142,11 +142,100 @@ SELECT DISTINCT duration FROM netflix_titles WHERE [type] = 'Movie';
 SELECT DISTINCT duration FROM netflix_titles WHERE [type] = 'TV Show';
 ```
 
-
 </details>
 
 <details>
 <summary><strong>Creating a Cleaned View for Better Analysis:</strong></summary>
+
+1. **Handling Null Values**: 
+   - Replaced nulls in the `cast` column with 'Unknown' to ensure complete data for actor analyses.
+
+2. **Standardizing Country Values**: 
+   - Trimmed spaces and replaced empty strings in the `country` column with 'Unknown'. Extracted the first country from multi-country entries for accurate regional analysis.
+
+3. **Converting Date Formats**: 
+   - Converted `date_added` to a `date` type for easier time-based analyses.
+
+4. **Correcting Data Types**: 
+   - Cast `release_year` to a 4-character string for consistency in representation.
+
+5. **Standardizing Ratings**: 
+   - Grouped ratings into broader categories, simplifying the understanding of content suitability.
+
+6. **Extracting and Standardizing Duration**: 
+   - Created `time_value` to extract numeric values and defined `time_unit` to specify whether durations are in minutes or seasons.
+
+7. **Direct Selection of Key Columns**: 
+   - Selected essential columns to retain critical information while keeping the dataset manageable.
+
+### Conclusion
+These transformations enhance data quality and usability, enabling deeper insights into content trends and user preferences for informed decision-making.
+
+
+
+
+
+
+Query:
+
+```sql
+
+CREATE OR ALTER VIEW cleaned_table AS (
+SELECT
+    show_id
+    , type
+    , title
+    , director
+    , ISNULL(cast, 'Unknown') as cast
+    , LTRIM(RTRIM(
+        ISNULL(
+            CASE 
+                WHEN LTRIM(RTRIM(country)) = '' THEN 'Unknown'
+                WHEN CHARINDEX(',', LTRIM(country)) = 1 THEN
+                    CASE 
+                        WHEN CHARINDEX(',', LTRIM(SUBSTRING(country, 2, LEN(country)))) > 0 
+                        THEN SUBSTRING(LTRIM(SUBSTRING(country, 2, LEN(country))), 1, CHARINDEX(',', LTRIM(SUBSTRING(country, 2, LEN(country)))) - 1)
+                        ELSE LTRIM(SUBSTRING(country, 2, LEN(country)))
+                    END
+                WHEN CHARINDEX(',', country) > 0 
+                THEN SUBSTRING(country, 1, CHARINDEX(',', country) - 1)
+                ELSE country
+            END, 
+            'Unknown'
+        )
+    )) AS country
+    , CONVERT(date, date_added) as date_added
+    , CAST(release_year AS CHAR(4)) as release_year-- I mistakenly imported it as int
+    , CASE 
+        WHEN Rating IS NULL OR Rating = '' THEN 'Unknown'
+        WHEN Rating LIKE '% min' THEN 'Unknown'
+        WHEN Rating IN ('G', 'TV-G', 'TV-Y', 'TV-Y7') THEN 'General Audience'
+        WHEN Rating IN ('PG', 'TV-PG', 'TV-Y7-FV') THEN 'Parental Guidance Suggested'
+        WHEN Rating IN ('PG-13', 'TV-14') THEN 'Parents Strongly Cautioned'
+        WHEN Rating IN ('R', 'NC-17', 'TV-MA') THEN 'Restricted/Adult'
+        WHEN Rating IN ('NR', 'UR', 'Unknown') THEN 'Unrated/Not Rated/Unknown'
+        ELSE 'Unknown'
+    END AS rating
+    , CASE 
+            WHEN duration IS NULL THEN NULL
+            WHEN duration LIKE '%min%' THEN CAST(SUBSTRING(duration, 1, CHARINDEX(' ', duration) - 1) AS INT)
+            WHEN duration LIKE '%Seasons%' THEN CAST(SUBSTRING(duration, 1, CHARINDEX(' ', duration) - 1) AS INT)
+            ELSE NULL
+        END AS time_value,
+        CASE
+            WHEN duration IS NULL THEN NULL
+            WHEN duration LIKE '%min%' THEN 'min'
+            WHEN duration LIKE '%Seasons%' THEN 'Seasons'
+            ELSE NULL
+        END AS time_unit
+    , listed_in
+    , description
+FROM
+    netflix_titles);
+
+```
+
+
 
 Developed a cleaned view of the dataset by addressing inconsistencies and standardizing the data, enabling more accurate and efficient analysis.
 
