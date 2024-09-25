@@ -3,36 +3,76 @@ SELECT TOP 10 * FROM netflix_titles;
 
 -- Understanding Null/missing/unknown values
 
--- Director column has null values
+-- For director column
 
-SELECT COUNT(*) AS null_count 
+SELECT director, COUNT(*) AS null_count 
 FROM netflix_titles
 WHERE director IS NULL OR director = 'Unknown' OR TRIM([director]) = ''
+GROUP BY director;
 
--- cast has null values
 
-SELECT COUNT(*) AS null_count 
+SELECT TOP 10 director 
+FROM netflix_titles;
+
+-- The director column has multiple values in the same column separated by commas
+
+
+-- For cast column
+
+SELECT [cast], COUNT(*) AS null_count 
 FROM netflix_titles
 WHERE [cast] IS NULL OR [cast] = 'Unknown' OR TRIM([cast]) = ''
+GROUP BY [cast];
+
+
+
+SELECT TOP 10 [cast]
+FROM netflix_titles;
+
+-- For title column
+
+SELECT type, title, director
+FROM netflix_titles
+WHERE [title] IS NULL OR [title] = 'Unknown' OR TRIM([title]) = '';
 
 -- Title has an unknown value
 -- No it's actually the name of the mmovie 'Unknown' Hehehe
 
-SELECT *  
-FROM netflix_titles
-WHERE [title] IS NULL OR [title] = 'Unknown' OR TRIM([title]) = ''
-
--- Country has null value
+-- For Country column
 
 SELECT COUNT(*) as Null_count
 FROM netflix_titles
-WHERE [country] IS NULL OR [country] = 'Unknown' OR TRIM([country]) = ''
+WHERE [country] IS NULL OR [country] = 'Unknown' OR TRIM([country]) = '';
 
--- Rating has unknown and inconsistent values
-SELECT DISTINCT rating FROM netflix_titles
 
--- Duration has unknown and inconsistent values the movies are in min and tv shows are in seasons
-SELECT DISTINCT duration FROM netflix_titles
+SELECT TOP 10 country
+FROM netflix_titles;
+
+-- For  Rating coolumn
+
+SELECT DISTINCT rating as distinct_rating FROM netflix_titles;
+
+
+-- For Duration column
+
+SELECT COUNT(*) as Null_count
+FROM netflix_titles
+WHERE [duration] IS NULL OR [duration] = 'Unknown' OR TRIM([duration]) = '';
+
+-- has 3 null values
+
+SELECT TOP 10
+    [type]
+    , duration
+FROM netflix_titles;
+
+-- has null, unknown and inconsistent values 
+
+SELECT DISTINCT duration FROM netflix_titles WHERE [type] = 'Movie';
+
+SELECT DISTINCT duration FROM netflix_titles WHERE [type] = 'TV Show';
+
+--the movies are in min and tv shows are in seasons
 
 -- Creating a cleaned View for better analysis
 
