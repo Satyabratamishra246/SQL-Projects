@@ -837,7 +837,16 @@ Created utilities such as the "Top 10 Latest Movies List" to enhance user experi
 </details>
 
 
+## Few Descriptive Insights
 
+| Category   | Insight |
+| -------- | ------- |
+| Movie & TV Shows distribution   | The data shows that the number of movies and TV shows on the platform has increased significantly since 2015. While the number of movies has increased by around 90%, the number of TV shows has seen a more dramatic increase of approximately 460%. This suggests that the platform has been actively expanding its TV show content   |
+|  Movie & TV Shows distribution |    The data shows that the United States dominates the streaming market with the highest number of movies and TV shows, while countries like India, South Korea, and Japan have a significant presence in both categories. Emerging markets like Nigeria, Mexico, and Australia are also gradually increasing their influence  |
+| Rating for Movie & TV Show |  The data shows that the majority of movies and TV shows on the platform are rated "Restricted/Adult" and "Parents Strongly Cautioned," indicating a significant portion of the content is intended for mature audiences. While there are a smaller number of movies and TV shows rated "General Audience" and "Parental Guidance Suggested," the content on the platform leans towards a more mature demographic  |
+Genre | Netflix offers a diverse range of content, with a strong focus on international movies and TV shows. Popular genres include dramas, comedies, and documentaries, catering to various viewer preferences. This strategy helps attract and retain a broad audience base |
+Top Actor Stats | The analysis reveals that Anupam Kher has been a prominent figure in the entertainment industry for 29 years. He has worked in 42 movies and 1 TV shows across various countries, including India, Canada and United States. His versatile career has spanned 14 diverse genres, including Crime, comedy, Musical, Sci-fi fantasy and others, and he has collaborated with 273 actors |
+Cast | The top 3 comedians who have appeared in the most stand-up comedy shows on Netflix after 2018 are Jeff Dunham, Kevin Hart, and Katt Williams |
 
 
 ## Conclusion:

@@ -143,7 +143,7 @@ GROUP BY type
 UNION
 SELECT 'Total' AS type, COUNT(show_id) AS count
 FROM cleaned_table
-ORDER BY [count]
+ORDER BY [count];
 
 
 -- Q2. Ranking countries based on count of movies and tv shows
@@ -571,7 +571,7 @@ SELECT
 FROM cleaned_table
 WHERE cast LIKE '%Anupam Kher%';
 
--- Q6. How many actors and directors has he worked with?
+-- Q6. How many actors has he worked with?
 
 SELECT COUNT(cast) - 1 AS co_stars_count
     FROM (
