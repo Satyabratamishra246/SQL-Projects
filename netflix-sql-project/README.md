@@ -28,7 +28,7 @@ This project focuses on performing a detailed analysis of the Netflix titles dat
 <summary><strong>Understanding Null/Missing/Unknown Values:</strong></summary>
 
 For director column
-```
+```sql
     SELECT director, COUNT(*) AS null_count 
     FROM netflix_titles
     WHERE director IS NULL OR director = 'Unknown' OR TRIM([director]) = ''
