@@ -450,14 +450,14 @@ WHERE type = 'Movie' AND country = 'South Korea'
 GROUP BY country
 
 
--- Q2. Total Movies duration
+-- Q2. Total Movies Average duration
 
 SELECT
     AVG(time_value) AS average_movie_duration
 FROM cleaned_table
 WHERE type = 'Movie'
 
--- Q2. How the average movie duration changed over the years in Australia
+-- Q3. How the average movie duration changed over the years in Australia
 
 SELECT
     release_year
@@ -467,7 +467,7 @@ WHERE type = 'Movie' AND country = 'Australia'
 GROUP BY release_year
 ORDER BY release_year
 
--- Q3. TV shows with more than 7 seasons
+-- Q4. TV shows with more than 7 seasons
 
 SELECT
     show_id
@@ -476,7 +476,7 @@ SELECT
 FROM cleaned_table
 WHERE time_unit = 'Seasons' AND time_value > 7
 
---Q4. Average duration of movies in the Drama Gence in South Korea in the last 5 years
+--Q5. Average duration of movies in the Drama Gence in South Korea in the last 5 years
 
 WITH full_list AS (
     SELECT
@@ -498,7 +498,7 @@ FROM full_list
 WHERE Genre = 'Dramas'
 GROUP BY Genre;
 
--- Q5. List of Movies with duration between 70mins to 100mins in Action Genre in 'South Africa'
+-- Q6. List of Movies with duration between 70mins to 100mins in Action Genre in 'South Africa'
 
 WITH full_list AS (
     SELECT
@@ -541,14 +541,14 @@ GROUP BY [actor_name]
 ORDER BY COUNT(DISTINCT show_id) DESC
 
 
---Q3. How many movies and tv shows has he worked in?
+--Q2. How many movies and tv shows has he worked in?
 SELECT 
     COUNT(CASE WHEN [type] = 'Movie' THEN 1 END) AS movies_count
     , COUNT(CASE WHEN [type] = 'TV Show' THEN 1 END) AS tvshows_count
 FROM cleaned_table 
 WHERE cast LIKE '%Anupam Kher%';
 
--- Q4. In which all countryies he has worked in?
+-- Q3. In which all countryies he has worked in?
 
 SELECT
     DISTINCT TRIM(value) AS country 
@@ -556,7 +556,7 @@ FROM cleaned_table
 CROSS APPLY string_split(country, ',')
 WHERE cast LIKE '%Anupam Kher%';
 
--- Q5. In which all genres he has worked in?
+-- Q4. In which all genres he has worked in?
 
 SELECT
     DISTINCT TRIM(value) AS genre
@@ -564,14 +564,14 @@ FROM cleaned_table
 CROSS APPLY string_split(listed_in, ',')
 WHERE cast LIKE '%Anupam Kher%';
 
--- Q6. For how many years has he worked in the industry?
+-- Q5. For how many years has he worked in the industry?
 
 SELECT
     CONVERT(INT, MAX(release_year)) - CONVERT(INT, MIN(release_year) ) AS yrs_in_industry
 FROM cleaned_table
 WHERE cast LIKE '%Anupam Kher%';
 
--- Q7. How many actors and directors has he worked with?
+-- Q6. How many actors and directors has he worked with?
 
 SELECT COUNT(cast) - 1 AS co_stars_count
     FROM (

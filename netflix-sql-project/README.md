@@ -435,7 +435,7 @@ GROUP BY release_year, TRIM(value)
 ORDER BY release_year DESC,[show_count] DESC;
 ```
 
--- Q4. Top 5 Movie Genre 
+Q4. Top 5 Movie Genre 
 ```sql
 
 SELECT TOP 5 type,
@@ -448,7 +448,7 @@ GROUP BY [type], TRIM(value)
 ORDER BY [show_count] DESC;
 
 ```
--- Q5. Most common combination of Genres
+Q5. Most common combination of Genres
 ```sql
 
 SELECT TOP 1
@@ -719,7 +719,7 @@ GROUP BY [actor_name]
 ORDER BY COUNT(DISTINCT show_id) DESC;
 ```
 
-Q3. How many movies and tv shows has he worked in?
+Q2. How many movies and tv shows has he worked in?
 ```sql
 SELECT 
     COUNT(CASE WHEN [type] = 'Movie' THEN 1 END) AS movies_count
@@ -728,7 +728,7 @@ FROM cleaned_table
 WHERE cast LIKE '%Anupam Kher%';
 
 ```
-Q4. In which all countryies he has worked in?
+Q3. In which all countryies he has worked in?
 ```sql
 
 SELECT
@@ -738,7 +738,7 @@ CROSS APPLY string_split(country, ',')
 WHERE cast LIKE '%Anupam Kher%';
 
 ```
--- Q5. In which all genres he has worked in?
+Q4. In which all genres he has worked in?
 
 ```sql
 SELECT
@@ -748,7 +748,7 @@ CROSS APPLY string_split(listed_in, ',')
 WHERE cast LIKE '%Anupam Kher%';
 ```
 
-Q6. For how many years has he worked in the industry?
+Q5. For how many years has he worked in the industry?
 
 ```sql
 SELECT
@@ -757,7 +757,7 @@ FROM cleaned_table
 WHERE cast LIKE '%Anupam Kher%';
 
 ```
-Q7. How many actors and directors has he worked with?
+Q6. How many actors and directors has he worked with?
 ```sql
 
 SELECT COUNT(cast) - 1 AS co_stars_count
@@ -776,6 +776,61 @@ Developed detailed statistics for actors, including the number of shows they app
 
 <details>
 <summary><strong>Utilities for Customers:</strong></summary>
+
+
+Q1. Top 10 latest movies list
+
+```sql
+SELECT TOP 10
+    title
+    , date_added
+FROM cleaned_table
+WHERE [type] = 'Movie'
+ORDER BY date_added DESC;
+
+```
+Q2. Top 5 latest TV Shows for Kids in India
+
+```sql
+SELECT TOP 5
+    title
+    , date_added
+    , listed_in
+FROM cleaned_table
+WHERE type = 'TV Show'  AND country = 'India'
+    AND listed_in LIKE '%Kid%'
+ORDER BY date_added DESC;
+
+```
+Q3. List All TV Shows Released in a Specific Year (e.g 2020)
+```sql
+
+SELECT title
+    , release_year
+FROm cleaned_table
+WHERE type = 'TV Show' AND release_year = '2020';
+```
+
+Q4. List All Movies that are Documentaries
+
+```sql
+SELECT show_id, title, listed_in, [type]
+FROM cleaned_table
+WHERE listed_in LIKE '%Documentaries%' AND [type] = 'Movie';
+
+```
+Q5. Find All Movies/TV Shows by Director 'Rajiv Chilaka'
+
+```sql
+SELECT
+    show_id
+    , [type]
+    , title
+    , director
+FROM cleaned_table
+WHERE director LIKE '%Rajiv Chilaka';
+
+```
 
 Created utilities such as the "Top 10 Latest Movies List" to enhance user experience by providing quick access to popular and recent content.
 
