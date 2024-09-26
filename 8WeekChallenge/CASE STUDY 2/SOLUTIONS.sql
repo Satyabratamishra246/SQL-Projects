@@ -171,7 +171,7 @@ GROUP BY DATENAME(WEEKDAY, order_time);
 
 -- GROUP B - Runner and Customer Experience
 
--- Q1. How many runners signed up for each 1 week period?
+-- Q1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
 SELECT DATEDIFF(DAY, '2021-01-01', registration_date) / 7 + 1 AS WeekNumber,
 	COUNT(runner_id) AS RunnerCount
@@ -214,64 +214,43 @@ FROM DeliveryTime
 
 -- Q6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
 
-SELECT * FROM runner_orders
-
-SELECT
-	*
-	, runner_orders.distance_km/(CAST(runner_orders.duration_minutes AS DECIMAL(4, 2))/60)  AS SpeedInKMperHOur
+SELECT runner_orders.distance_km/(CAST(runner_orders.duration_minutes AS DECIMAL(4, 2))/60)  AS SpeedInKMperHOur
 FROM runner_orders
-WHERE
-	cancellation IS NULL
-ORDER BY
-	SpeedInKMperHOur DESC;
+WHERE cancellation IS NULL
+ORDER BY SpeedInKMperHOur DESC;
 
 -- Q7. What is the successful delivery percentage for each runner?
 
-SELECT
-	runner_orders.runner_id
-	, COUNT(CASE WHEN runner_orders.cancellation IS NULL THEN 1 END)/CAST(COUNT(runner_orders.runner_id) AS DECIMAL(4, 2)) * 100 AS SuccessPercentage
-FROm
-	runner_orders
-GROUP BY
-	runner_orders.runner_id;
+SELECT runner_orders.runner_id, 
+	COUNT(CASE WHEN runner_orders.cancellation IS NULL THEN 1 END)/CAST(COUNT(runner_orders.runner_id) AS DECIMAL(4, 2)) * 100 AS SuccessPercentage
+FROm runner_orders
+GROUP BY runner_orders.runner_id;
 
 -- Group C - Ingredient Optimization
 
 -- Q1. What are the standard ingredients for each pizza?
 
-SELECT
-	T.pizza_id
-	, STRING_AGG(CAST(pizza_toppings.topping_name AS VARCHAR(MAX)),  ',') AS standard_ingredients
-FROM 
-	(
-	SELECT 
-		pizza_recipes.pizza_id,
+SELECT T.pizza_id, STRING_AGG(CAST(pizza_toppings.topping_name AS VARCHAR(MAX)),  ',') AS standard_ingredients
+FROM (SELECT pizza_recipes.pizza_id,
 		TRIM(value) AS topping
-	FROM pizza_recipes
-	CROSS APPLY STRING_SPLIT(CONVERT(varchar(max), pizza_recipes.toppings), ',')
+		FROM pizza_recipes
+		CROSS APPLY STRING_SPLIT(CONVERT(varchar(max), pizza_recipes.toppings), ',')
 	) T
-JOIN
-	pizza_toppings ON T.topping = pizza_toppings.topping_id
-GROUP BY
-	T.pizza_id
+JOIN pizza_toppings ON T.topping = pizza_toppings.topping_id
+GROUP BY T.pizza_id;
 
 -- Q2. What was the most commonly added extra?
 
 SELECT TOP 1
-	CAST(pizza_toppings.topping_name AS VARCHAR(MAX)) as mostusedtopping
-	, COUNT(pizza_toppings.topping_id) AS cnt
-FROM
-	(
-		SELECT
-			CAST(value AS INT) AS extras
-		FROM
-			customer_orders
+	CAST(pizza_toppings.topping_name AS VARCHAR(MAX)) as mostusedtopping,
+	COUNT(pizza_toppings.topping_id) AS cnt
+FROM(SELECT CAST(value AS INT) AS extras
+		FROM customer_orders
 		CROSS APPLY STRING_SPLIT(CONVERT(varchar(max), extras), ',')
 	) T
 JOIN pizza_toppings ON T.extras = pizza_toppings.topping_id
-GROUP BY
-	CAST(pizza_toppings.topping_name AS VARCHAR(MAX))
-ORDER BY cnt DESC
+GROUP BY CAST(pizza_toppings.topping_name AS VARCHAR(MAX))
+ORDER BY cnt DESC;
 
 -- Q3. What was the most common exclusion?
 
@@ -289,7 +268,7 @@ FROM
 JOIN pizza_toppings ON T.exclusion = pizza_toppings.topping_id
 GROUP BY
 	CAST(pizza_toppings.topping_name AS VARCHAR(MAX))
-ORDER BY cnt DESC
+ORDER BY cnt DESC;
 
 -- Q4. Generate an order item for each record in the customers_orders table in the format of one of the following:
 
@@ -297,9 +276,6 @@ ORDER BY cnt DESC
 --Meat Lovers - Exclude Beef
 --Meat Lovers - Extra Bacon
 --Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
-
-SELECT * FROM customer_orders;
-
 SELECT
 	*
 	,pn.pizza_name
@@ -352,12 +328,7 @@ ORDER BY
 
 -- D. Pricing and Ratings
 
--- Q1. If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes
--- how much money has Pizza Runner made so far if there are no delivery fees?
-
-SELECT * FROM pizza_runner.dbo.customer_orders
-
-SELECT * FROM pizza_runner.dbo.pizza_names
+-- Q1. If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes how much money has Pizza Runner made so far if there are no delivery fees?
 
 SELECT
 	SUM(CASE WHEN CAST(pizza_name AS VARCHAR(MAX))= 'Meatlovers' THEN 12
@@ -369,8 +340,7 @@ JOIN pizza_runner.dbo.pizza_names
 	ON customer_orders.pizza_id = pizza_names.pizza_id
 WHERE cancellation IS NULL
 
--- Q2. What if there was an additional $1 charge for any pizza extras?
--- Add cheese is $1 extra
+-- Q2. What if there was an additional $1 charge for any pizza extras? Add cheese is $1 extra
 WITH Pizza_sales AS 
 	(
 	SELECT
