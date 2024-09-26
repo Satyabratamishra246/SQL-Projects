@@ -18,7 +18,7 @@ Danny has shared with you 3 key datasets for this case study:
 * menu
 * members
 
-#### Use the schema_query.sql file to create the same tables in your environment
+#### Use the schema_query.sql file to create the above tables with data in your environment and write queries to answer the following questions: 
 
 
 
@@ -209,7 +209,7 @@ LEFT JOIN members ON members.customer_id = sales.customer_id
 JOIN menu ON menu.product_id =sales.product_id;
 ```
 
-#### Bonus Question 1: Rank All The Things. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+#### Bonus Question 2: Rank All The Things. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 
 #### Recreate the following table output using the available data:
 _______________________________________________________________________

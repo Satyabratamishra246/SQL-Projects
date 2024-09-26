@@ -133,7 +133,7 @@ FROM (
 	) T, menu
 WHERE
 	OrderedSequence = 1
-	AND T.product_id = menu.product_id
+	AND T.product_id = menu.product_id;
 
 -- Q7. Which item was purchased just before the customer became a member?
 
@@ -153,7 +153,7 @@ FROM (
 	) T, menu
 WHERE
 	OrderedSequence = 1
-	AND T.product_id = menu.product_id
+	AND T.product_id = menu.product_id;
 
 
 -- Q8. What is the total items and amount spent for each member before they became a member?
@@ -168,7 +168,7 @@ FROM
 	JOIN members ON sales.order_date < members.join_date
 	AND members.customer_id = sales.customer_id
 GROUP BY
-	sales.customer_id
+	sales.customer_id;
 
 -- Q9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
@@ -227,27 +227,33 @@ JOIN menu ON menu.product_id =sales.product_id;
 -- Recreate the following table output using the available data:
 -- customer_id	order_date	product_name	price	member	ranking
 
-WITH RankedTable AS
-		(
-			SELECT 
-				sales.customer_id
-				, sales.order_date
-				, menu.product_name
-				, menu.price
-				, members.join_date
-				, (CASE WHEN sales.order_date >= members.join_date THEN 'Y' ELSE 'N' END ) AS member
-				, RANK() OVER(PARTITION BY sales.customer_id ORDER BY sales.order_date) AS rnk
-			FROM sales
-			LEFT JOIN members ON members.customer_id = sales.customer_id
-			JOIN menu ON menu.product_id = sales.product_id
-		)
+WITH RankedTable AS (
+    SELECT 
+        sales.customer_id,
+        sales.order_date,
+        menu.product_name,
+        menu.price,
+        members.join_date,
+        (CASE WHEN sales.order_date >= members.join_date THEN 'Y' ELSE 'N' END) AS member,
+        RANK() OVER(PARTITION BY sales.customer_id ORDER BY sales.order_date) AS rnk
+    FROM sales
+    LEFT JOIN members ON members.customer_id = sales.customer_id
+    JOIN menu ON menu.product_id = sales.product_id
+)
 
 SELECT 
-	RankedTable.customer_id
-	, RankedTable.order_date
-	, RankedTable.product_name
-	, (CASE WHEN RankedTable.order_date >= join_date THEN rnk
-		ELSE NULL END) AS rnk
-FROM RankedTable
+    RankedTable.customer_id,
+    RankedTable.order_date,
+    RankedTable.product_name,
+    RankedTable.price,
+    RankedTable.member,
+    (CASE WHEN RankedTable.order_date >= RankedTable.join_date THEN RankedTable.rnk
+          ELSE NULL END) AS ranking
+FROM RankedTable;
+
+--
+--
+--
+-- End
 
 
