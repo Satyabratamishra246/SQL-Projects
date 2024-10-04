@@ -1,5 +1,5 @@
 # Case Study 1: Danny's Diner
-![Banner for Danny's Diner](URL or path to imaghttps://8weeksqlchallenge.com/images/case-study-designs/1.pnge)
+![Banner for Danny's Diner](https://8weeksqlchallenge.com/images/case-study-designs/1.png)
 
 
 #### Introduction
