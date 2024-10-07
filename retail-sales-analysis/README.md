@@ -26,8 +26,8 @@
 
 ### Connect with Me
 
-<a href="https://github.com/Satyabratamishra246/github.io/blob/205f904846099c1c36a9b978d92e1d50cecc5e8c/images/linkedin-icon.png" aria-label="LinkedIn">
-  <img src="images/linkedin-icon.png" alt="LinkedIn Icon" width="24">
+<a href="https://www.linkedin.com/in/satyabrata-mishra246/" aria-label="LinkedIn">
+  <img src="https://github.com/Satyabratamishra246/github.io/blob/205f904846099c1c36a9b978d92e1d50cecc5e8c/images/linkedin-icon.png" alt="LinkedIn Icon" width="24">
 </a>  
 <a href="https://github.com/Satyabratamishra246" aria-label="GitHub">
   <img src="https://github.com/Satyabratamishra246/github.io/blob/205f904846099c1c36a9b978d92e1d50cecc5e8c/images/github-icon.png" alt="GitHub Icon" width="24">
