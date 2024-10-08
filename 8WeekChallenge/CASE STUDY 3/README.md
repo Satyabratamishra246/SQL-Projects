@@ -211,8 +211,8 @@ GROUP BY plans.plan_name;
 SELECT COUNT(customer_id) AS upgrades_count
 FROM subscriptions
 JOIN plans ON subscriptions.plan_id = plans.plan_id
-WHERE start_date BETWEEN '2020-01-01' AND '2020-12-31'
-    AND plan_name = 'pro annual';
+WHERE start_date BETWEEN '2020-01-01' AND '2020-12-31' AND
+    plan_name = 'pro annual';
 ```
 
 ##### Q9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
@@ -223,14 +223,13 @@ WITH pro__annual_customers AS
         plans.plan_name,
         start_date
     FROM subscriptions
-	JOIN plans ON subscriptions.plan_id = plans.plan_id
-	WHERE plan_name = 'pro annual'
-	)
+    JOIN plans ON subscriptions.plan_id = plans.plan_id
+    WHERE plan_name = 'pro annual'
+    )
 SELECT AVG(DATEDIFF(DAY, s.start_date, p.start_date)) AS avg_days
 FROM subscriptions s
 JOIN plans ON s.plan_id = plans.plan_id
-JOIN pro__annual_customers p
-ON s.customer_id = p.customer_id
+JOIN pro__annual_customers p ON s.customer_id = p.customer_id
 WHERE plans.plan_name = 'trial';
 
 -- better solution
@@ -252,26 +251,27 @@ WITH day_taken AS
         (CASE
             WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 0 AND 30 THEN '0-30'
             WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 31 AND 60 THEN '31-60'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 61 AND 90 THEN '61-90'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 91 AND 120 THEN '91-120'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 121 AND 150 THEN '121-150'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 151 AND 180 THEN '151-180'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 181 AND 210 THEN '181-210'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 211 AND 240 THEN '211-240'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 241 AND 270 THEN '241-270'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 271 AND 300 THEN '271-300'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 301 AND 330 THEN '301-330'
-			WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 331 AND 360 THEN '331-360'
-			ELSE '>360' END ) AS period
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 61 AND 90 THEN '61-90'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 91 AND 120 THEN '91-120'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 121 AND 150 THEN '121-150'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 151 AND 180 THEN '151-180'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 181 AND 210 THEN '181-210'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 211 AND 240 THEN '211-240'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 241 AND 270 THEN '241-270'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 271 AND 300 THEN '271-300'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 301 AND 330 THEN '301-330'
+            WHEN DATEDIFF(DAY, s1.start_date, s2.start_date) BETWEEN 331 AND 360 THEN '331-360'
+            ELSE '>360' END
+        ) AS period
     FROM subscriptions s1
     JOIN subscriptions s2 ON s1.customer_id = s2.customer_id
-	JOIN plans p1 ON s1.plan_id = p1.plan_id
+    JOIN plans p1 ON s1.plan_id = p1.plan_id
     JOIN plans p2 ON s2.plan_id = p2.plan_id
-	WHERE p1.plan_name = 'trial' AND p2.plan_name = 'pro annual'
-	)
+    WHERE p1.plan_name = 'trial' AND p2.plan_name = 'pro annual'
+    )
 SELECT period, COUNT(customer_id) AS customer_count
 FROM day_taken
-GROUP BY period
+GROUP BY period;
 ```
 ##### Q11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 
@@ -285,9 +285,9 @@ FROM
     FROM subscriptions
 	JOIN plans ON subscriptions.plan_id = plans.plan_id
 	) T
-WHERE T.plan_name = 'pro monthly'
-    AND T.next_plan = 'basic monthly'
-	AND T.next_plan_start_date BETWEEN '2020-01-01' AND '2020-12-31';
+WHERE T.plan_name = 'pro monthly' AND 
+    T.next_plan = 'basic monthly' AND
+    T.next_plan_start_date BETWEEN '2020-01-01' AND '2020-12-31';
 ```
 
 
