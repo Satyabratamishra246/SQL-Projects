@@ -2,7 +2,7 @@ SELECT * FROM foodie_fi.dbo.plans;
 
 -- GROUP A. Customer Journey
 
--- Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
+-- Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customerï¿½s onboarding journey.
 
 -- Try to keep it as short as possible - you may also want to run some sort of join to make your explanations a bit easier!
 
@@ -388,32 +388,3 @@ WHERE
 	AND T.next_plan_start_date BETWEEN '2020-01-01' AND '2020-12-31';
 
 -- GROUP C. Challenge Payment Question
-
-
-
-
-
-
-
-
-
-	
-
-
-
-	
-	
-
-
-
-
-
-	
-
-
-
-		
-
-
-
-	
