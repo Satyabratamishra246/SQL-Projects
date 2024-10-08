@@ -388,3 +388,53 @@ WHERE
 	AND T.next_plan_start_date BETWEEN '2020-01-01' AND '2020-12-31';
 
 -- GROUP C. Challenge Payment Question
+
+-- The Foodie-Fi team wants to create a new payments table for the year 2020 that includes amounts paid by each customer in the subscriptions table with the following requirements:
+
+-- * monthly payments always occur on the same day of month as the original start_date of any monthly paid plan
+-- * upgrades from basic to monthly or pro plans are reduced by the current paid amount in that month and start immediately
+-- * upgrades from pro monthly to pro annual are paid at the end of the current billing period and also starts at the end of the month period
+-- * once a customer churns they will no longer make payments
+
+
+-- Step 1: Create the payments table
+
+CREATE TABLE payments (
+    payment_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_id INT,
+    plan_id INT,
+    payment_date DATE,
+    amount DECIMAL(10, 2)
+);
+
+-- Step 2: Generate initial payments for monthly plans
+
+-- Step 3: Handle upgrades
+
+-- Step 4: Handle Churn
+
+
+
+-- Step 5: Check the Payments Table Data
+
+SELECT TOP 5 * FROM payments;
+
+SELECT DISTINCT(plan_id) FROM payments;
+
+SELECT MAX(payment_date), MIN(payment_date) FROM payments;
+
+SELECT customer_id
+FROM payments
+GROUP BY customer_id
+HAVING COUNT(payment_id) > 12;
+
+
+SELECT * FROM payments WHERE customer_id = 2 ORDER BY payment_date;
+
+DROP TABLE payments
+
+SELECT * FROM subscriptions
+WHERE plan_id = 3;
+
+
+
