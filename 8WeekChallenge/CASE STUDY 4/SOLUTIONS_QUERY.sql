@@ -34,8 +34,7 @@ WITH node_allocations AS (
         node_id,
         DATEDIFF(day, start_date, end_date) AS duration
     FROM customer_nodes
-    WHERE end_date < '9999-12-31' -- Exclude ongoing allocations
-	--ORDER BY customer_id
+    WHERE end_date < '9999-12-31'
 ),
 reallocations AS (
     SELECT customer_id,
@@ -51,7 +50,39 @@ FROM reallocations;
 
 --Q5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region? 
 
---Will be solving soon
+WITH node_allocations AS (
+    SELECT customer_id,
+        node_id,
+        region_id,
+        DATEDIFF(day, start_date, end_date) AS duration
+    FROM customer_nodes
+    WHERE end_date < '9999-12-31'
+),
+reallocations AS (
+    SELECT customer_id,
+        node_id,
+        region_id,
+        SUM(duration) AS total_days,
+        COUNT(*) AS realloc_count
+    FROM node_allocations
+    GROUP BY customer_id, node_id, region_id
+),
+percentiles AS (
+    SELECT
+        region_id,
+        total_days,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_days) OVER (PARTITION BY region_id) AS Median,
+        PERCENTILE_CONT(0.8) WITHIN GROUP (ORDER BY total_days) OVER (PARTITION BY region_id) AS Percentile_80,
+        PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY total_days) OVER (PARTITION BY region_id) AS Percentile_95
+    FROM reallocations
+)
+
+SELECT DISTINCT
+    Median,
+    Percentile_80,
+    Percentile_95
+FROM percentiles;
+
 
 -- B. Customer Transactions
 
@@ -121,6 +152,11 @@ SELECT
     end_of_month,
     closing_balance
 FROM cumulative_balance;
+
+
+-- Q5. What is the percentage of customers who increase their closing balance by more than 5%?
+
+
 
 
 
